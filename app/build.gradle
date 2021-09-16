@@ -1,0 +1,85 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.mob.sdk'
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        minSdkVersion 17
+        targetSdkVersion 28
+        versionCode 7
+        versionName "1.0.7"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    signingConfigs {
+        debug {
+            storeFile file('../robot.jks')
+            storePassword '123456'
+            keyPassword '123456'
+            keyAlias = 'key0'
+        }
+    }
+}
+
+MobSDK {
+    appKey "33d4f0a61c6d1"
+    appSecret "04154c48e131bdbf1a39169014658b68"
+
+    MobGUI(true)
+    MobPush {
+        devInfo {
+            HUAWEI{
+                appId "100215127"
+            }
+
+            MEIZU{
+                appId "112481"
+                appKey "03dd70b9be434446a7255c8586e1725a"
+            }
+
+            XIAOMI{
+                appId "2882303761517721670"
+                appKey "5671772162670"
+            }
+
+            FCM {
+                //设置默认推送通知显示图标
+                iconRes "@mipmap/ic_launcher"
+            }
+            //此处OPPO的配置信息只是用来展示配置示例，不能用了测试OPPO通道推送，如需推送请替换成自己的正确应用信息
+//            OPPO {
+//                appKey "OPPO 的 appKey"
+//                appSecret "OPPO 的appSecret"
+//            }
+        }
+    }
+}
+
+dependencies {
+    implementation('com.jakewharton:butterknife:10.0.0')
+    annotationProcessor ('com.jakewharton:butterknife-compiler:10.0.0')
+    implementation project(':jsBridge')
+}
+
+apply plugin: 'com.google.gms.google-services'
+
+android.applicationVariants.all {
+    variant ->
+        variant.outputs.all {
+            //这里修改apk文件名
+            if(variant.buildType.name == 'release'){
+                def fileName = "robot_${variant.versionName}.apk"
+                outputFileName = fileName
+            }
+            if(variant.buildType.name== 'debug'){
+
+            }
+        }
+}
